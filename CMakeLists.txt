@@ -1,0 +1,45 @@
+cmake_minimum_required(VERSION 3.10)
+# set the project name and version
+project(cube VERSION 1.0)
+include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+conan_basic_setup()
+
+# specify the C++ standard
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+if(APPLE)
+  SET(CMAKE_CXX_FLAGS "-pthread -ldl -lm")
+else()
+  SET(CMAKE_CXX_FLAGS "-Wall -Werror -pthread -ldl -lm -lncursesw")
+endif(APPLE)
+add_compile_options(-fdiagnostics-color=always)
+set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
+
+# Add source files needed for tests and game
+set(SRC_FILES
+  src/utils.cc
+  src/draw.cc
+)
+
+# Add soruce files needed for game only
+set(SRC_FILES_GAME 
+  src/main.cc 
+  ${SRC_FILES}
+)
+
+# Add source files for testing only
+set(SRC_FILES_TEST
+  ${SRC_FILES}
+)
+
+include_directories(/usr/local/lib/)
+link_directories(/usr/local/lib/)
+
+add_executable(cube ${SRC_FILES_GAME})
+add_executable(tests ${SRC_FILES_TEST})
+
+target_link_libraries(cube PUBLIC aubio ${CONAN_LIBS})
+target_link_libraries(tests PUBLIC aubio ${CONAN_LIBS})
+
+target_include_directories(cube PUBLIC "src")
+target_include_directories(tests PUBLIC "src" "test")
