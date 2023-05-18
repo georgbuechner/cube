@@ -73,7 +73,7 @@ int main() {
   else if (LINES > COLS)
     y_border += (LINES-COLS)/2;
   int field_size = std::min(LINES, COLS)-std::min(x_border, y_border)*2 + 4;
-  int cs = field_size - field_size*0.25 -1;
+  int cs = field_size - field_size*0.25 -2;
 
   Field3D field_3d(cs+1);
   for (int i=0; i < 15; i++) {
